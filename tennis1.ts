@@ -39,12 +39,21 @@ const WonMatch = AdvantagedMatch.withConstraint((players) => {
   return Math.abs(player1.score - player2.score) >= 2;
 });
 
+const Player1Leading = Match.withConstraint((players) => {
+  const [player1, player2] = players;
+  return player1.score > player2.score;
+});
+
+const Player2Leading = Match.withConstraint(
+  (players) => !TiedMatch.guard(players) && !Player1Leading.guard(players)
+);
+
 // ============= Utils ==============
 const getWinner = (players: Static<typeof Match>) => {
-  const [player1, player2] = players;
-
-  if (player1.score > player2.score) return player1;
-  else return player2;
+  return match(
+    [Player1Leading, (players) => players[0]],
+    [Player2Leading, (players) => players[1]]
+  )(players);
 };
 
 const pointsMapping: { [key: number]: string } = {
@@ -54,9 +63,7 @@ const pointsMapping: { [key: number]: string } = {
   3: "Forty",
 };
 
-
 // ============= Core ==============
-
 
 const getScoreF = match(
   [DeucedMatch, () => `Deuce`],
@@ -72,7 +79,6 @@ const getScoreF = match(
     },
   ]
 );
-
 
 // ============= Test Shim ==============
 
