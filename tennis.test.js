@@ -1,6 +1,6 @@
 'use strict';
  
-const getScore1 = require('./tennis1');
+const getScore1 = require('./dist/tennis1.js');
 const getScore2 = require('./tennis2');
 const getScore3 = require('./tennis3');
 
